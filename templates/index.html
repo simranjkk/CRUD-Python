@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+{% block title %} Home {% endblock %}
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col md-12">
+
+            <div class=" p-3">
+                <h2>Manage Jobs <button type="button" class="btn btn-success float-right"
+                        data-toggle="modal" data-target="#mymodal">Add New Job Listing</button> </h2>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success alert-dismissable" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                    {{message}}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                <table class="table table-hover table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Job Title</th>
+                        <th>Company</th>
+                        <th>Location</th>
+                        <th>Salary</th>
+                        <th>Days since posted</th>
+                        <th>Actions</th>
+
+                    </tr>
+                    {% for row in employees %}
+                    <tr>
+                        <td>{{row.id}}</td>
+                        <td>{{row.job_title}}</td>
+                        <td>{{row.company}}</td>
+                        <td>{{row.location}}</td>
+                        <td>{{row.salary}}</td>
+                        <td>{{row.days}}</td>
+                        <td>
+                            <div class ="row">
+                            <a href="/update/{{row.id}}"  data-toggle="modal"
+                                data-target="#modaledit{{row.id}}">
+                                <img src="https://img.icons8.com/ios-glyphs/30/000000/edit--v2.png"/>
+                                </a>
+                            <a href="/delete/{{row.id}}"
+                                onclick="return confirm('Are You Sure To Delete ?')">
+                                <img src="https://img.icons8.com/ios-glyphs/30/000000/filled-trash.png"/></a>
+                         </div>
+                        </td>
+                    </tr>
+
+                    <!-- Modal Edit Employee-->
+                    <div id="modaledit{{row.id}}" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Update Information</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{url_for('update')}}" method="POST">
+                                        <div class="form-group">
+                                            <label>Job Title:</label>
+                                            <input type="hidden" name="id" value="{{row.id}}">
+                                            <input type="text" class="form-control" name="job_title" value="{{row.job_title}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Company:</label>
+                                            <input type="text" class="form-control" name="company" value="{{row.company}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Location:</label>
+                                            <input type="text" class="form-control" name="location" value="{{row.location}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Salary:</label>
+                                            <input type="text" class="form-control" name="salary" value="{{row.salary}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Days Since Posted:</label>
+                                            <input type="text" class="form-control" name="days" value="{{row.days}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn btn-primary" type="submit">Update</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </table>
+            </div>
+            <!-- Modal Add Employee-->
+            <div id="mymodal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add Job</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{url_for('insert')}}" method="POST">
+                                <div class="form-group">
+                                    <label>Job Title:</label>
+                                    <input type="text" class="form-control" name="job_title" required="1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Company:</label>
+                                    <input type="text" class="form-control" name="company" required="1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Location:</label>
+                                    <input type="text" class="form-control" name="location" required="1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Salary:</label>
+                                    <input type="text" class="form-control" name="salary" required="1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Days Since posted:</label>
+                                    <input type="text" class="form-control" name="days" required="1">
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-secondary" type="submit">Add Job</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
